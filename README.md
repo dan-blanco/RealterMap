@@ -2,6 +2,12 @@
 
 http://34.202.100.11:8000
 
+## Main Files
+- https://github.com/dan-blanco/RealtyMap/blob/main/map/views.py
+- https://github.com/dan-blanco/RealtyMap/blob/main/map/templates/index.html 
+- https://github.com/dan-blanco/RealtyMap/blob/main/map/static/js/pages/leaflet-map-choro.init.js
+
+
 A few things left to add are :
 
 1. ETL Notebook for the U.S. County GEO-Spatial data
