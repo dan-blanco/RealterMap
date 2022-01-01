@@ -524,6 +524,7 @@ function onEachCounty(feature, layer){
 	layer.on({
 		mouseover: highlightFeature,
 		mouseout: resetHighlight,
+		preclick: highlightFeature
 		//click: 
 	});
 
@@ -534,6 +535,7 @@ function onEachFeature(feature, layer) { // state
 	layer.on({
 		mouseover: highlightFeature,
 		mouseout: resetHighlight,
+		preclick: highlightFeature,
 		click: zoomToFeature
 	});
 }
