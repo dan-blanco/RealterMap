@@ -1,0 +1,517 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block css%}
+<style type="text/css">
+.info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+.legend {
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+</style>
+{% include 'partials/css.html' %}
+{% endblock %}
+{% block extra_css %}
+<!-- leaflet Css -->
+<link href="{% static 'libs/leaflet/leaflet.css' %}" rel="stylesheet" type="text/css" />
+
+<link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block contents %}
+                        <div class="row">
+                            <div class="col-lg-10">
+				<div class="card">
+                                    <div class="card-body">
+					    <div class="mt-4">
+
+                                       		 <h4 class="card-title mb-4">Interactive Real Estate Map</h4>
+						 	<form>
+							<div class="col-lg-3">
+                                                        <label class="form-label" id="select-label">Select an option</label>
+                                                        <select id ="main_select" class="form-control select2">
+							    <optgroup label="Select Map Data">
+                                                            </optgroup>
+                                                        </select>
+
+                                                    </div>
+							</form>
+					    </div><br />
+                                        <div id="leaflet-map-interactive-map" class="leaflet-map"></div>
+					<br />
+					<p style="text-align:right;">Data Source : realtor.com residential listings database</p>
+                                            <div class="col-lg-6">
+                                                <div>
+                                                    <label for="customRange1" class="form-label" id="dateLabel" ></label>
+                                                    <input type="range" class="form-range" id="daterange" onmouseup="updateDate(this.value)"  >
+                                                </div>
+                                            </div>
+
+				    </div>
+
+				   
+                                </div>
+
+                           </div>
+<!--
+				<div class="col-lg-4">
+				     <div class="card">
+					    <div class="card-body">
+						<h4 class="card-title mb-4">Dashed Line</h4>
+
+						<div id="line_chart_dashed" class="apex-charts" dir="ltr"></div>
+					    </div>
+				     </div><!--end card-- 
+ 
+				</div> --> 
+			</div> 
+                        <!-- end row -->
+			<div class="row">
+
+
+
+                            <div class="col-xl-10">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title mb-4">Dashed Line</h4>
+                                        
+                                        <div id="line_chart_dashed" class="apex-charts" dir="ltr"></div>        
+                                    </div>
+                                </div><!--end card-->
+                            </div>
+
+		</div>
+                        
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+		
+{% endblock %}
+{% block r_sidebar %}
+{% include 'partials/rightsidebar.html' %}
+{% endblock %}
+{% block footer %}
+{% include 'partials/footer.html' %}
+{% endblock %}
+{% block javascript %}
+
+        <!-- JAVASCRIPT -->
+        <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
+        <script src="{% static 'libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'libs/metismenu/metisMenu.min.js' %}"></script>
+        <script src="{% static 'libs/simplebar/simplebar.min.js' %}"></script>
+        <script src="{% static 'libs/node-waves/waves.min.js' %}"></script>
+        <!-- leaflet plugin -->
+        <script src="{% static 'libs/leaflet/leaflet.js' %}"></script>
+
+        <!-- leaflet map.init -->
+        <script src="{% static 'js/pages/leaflet-us-states.js' %}"></script>
+	{%comment%}	<script src="{% static 'js/pages/geoJSON_counties.js' %}"></script> {%endcomment%}
+
+
+	<script>
+
+		// These variables are used for AJAX request
+	var page_r = '{% url 'state-data' %}'; 
+	var csrf_r = '{% csrf_token %}';
+
+
+	</script>
+	<script src="{% static 'libs/select2/js/select2.min.js' %}"></script>
+
+
+	<script src="{% static 'libs/spectrum-colorpicker2/spectrum.min.js' %}"></script>
+	<script src="{% static 'libs/bootstrap-timepicker/js/bootstrap-timepicker.min.js' %}"></script>
+	<script src="{% static 'libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js' %}"></script>
+	<script src="{% static 'libs/bootstrap-maxlength/bootstrap-maxlength.min.js' %}"></script>
+	<script src="{% static 'libs/@chenfengyuan/datepicker/datepicker.min.js' %}"></script>
+
+ <script src="{% static 'js/pages/leaflet-map-choro.init.js' %}"></script>
+
+ <script src="{% static 'js/pages/form-advanced.init.js' %}"></script>
+
+	<!-- apexcharts -->
+        <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
+
+        <!-- apexcharts init -->
+        <script src="{% static 'js/pages/apexcharts-realty.init.js' %}"></script>
+
+
+
+        <script src="{% static 'js/app.js' %}"></script>
+
+<script>
+/*
+$(document).ready(function(){
+	
+
+
+var usStates = [
+    { name: 'ALABAMA', abbreviation: 'AL'},
+    { name: 'ALASKA', abbreviation: 'AK'},
+    { name: 'AMERICAN SAMOA', abbreviation: 'AS'},
+    { name: 'ARIZONA', abbreviation: 'AZ'},
+    { name: 'ARKANSAS', abbreviation: 'AR'},
+    { name: 'CALIFORNIA', abbreviation: 'CA'},
+    { name: 'COLORADO', abbreviation: 'CO'},
+    { name: 'CONNECTICUT', abbreviation: 'CT'},
+    { name: 'DELAWARE', abbreviation: 'DE'},
+    { name: 'DISTRICT OF COLUMBIA', abbreviation: 'DC'},
+    { name: 'FEDERATED STATES OF MICRONESIA', abbreviation: 'FM'},
+    { name: 'FLORIDA', abbreviation: 'FL'},
+    { name: 'GEORGIA', abbreviation: 'GA'},
+    { name: 'GUAM', abbreviation: 'GU'},
+    { name: 'HAWAII', abbreviation: 'HI'},
+    { name: 'IDAHO', abbreviation: 'ID'},
+    { name: 'ILLINOIS', abbreviation: 'IL'},
+    { name: 'INDIANA', abbreviation: 'IN'},
+    { name: 'IOWA', abbreviation: 'IA'},
+    { name: 'KANSAS', abbreviation: 'KS'},
+    { name: 'KENTUCKY', abbreviation: 'KY'},
+    { name: 'LOUISIANA', abbreviation: 'LA'},
+    { name: 'MAINE', abbreviation: 'ME'},
+    { name: 'MARSHALL ISLANDS', abbreviation: 'MH'},
+    { name: 'MARYLAND', abbreviation: 'MD'},
+    { name: 'MASSACHUSETTS', abbreviation: 'MA'},
+    { name: 'MICHIGAN', abbreviation: 'MI'},
+    { name: 'MINNESOTA', abbreviation: 'MN'},
+    { name: 'MISSISSIPPI', abbreviation: 'MS'},
+    { name: 'MISSOURI', abbreviation: 'MO'},
+    { name: 'MONTANA', abbreviation: 'MT'},
+    { name: 'NEBRASKA', abbreviation: 'NE'},
+    { name: 'NEVADA', abbreviation: 'NV'},
+    { name: 'NEW HAMPSHIRE', abbreviation: 'NH'},
+    { name: 'NEW JERSEY', abbreviation: 'NJ'},
+    { name: 'NEW MEXICO', abbreviation: 'NM'},
+    { name: 'NEW YORK', abbreviation: 'NY'},
+    { name: 'NORTH CAROLINA', abbreviation: 'NC'},
+    { name: 'NORTH DAKOTA', abbreviation: 'ND'},
+    { name: 'NORTHERN MARIANA ISLANDS', abbreviation: 'MP'},
+    { name: 'OHIO', abbreviation: 'OH'},
+    { name: 'OKLAHOMA', abbreviation: 'OK'},
+    { name: 'OREGON', abbreviation: 'OR'},
+    { name: 'PALAU', abbreviation: 'PW'},
+    { name: 'PENNSYLVANIA', abbreviation: 'PA'},
+    { name: 'PUERTO RICO', abbreviation: 'PR'},
+    { name: 'RHODE ISLAND', abbreviation: 'RI'},
+    { name: 'SOUTH CAROLINA', abbreviation: 'SC'},
+    { name: 'SOUTH DAKOTA', abbreviation: 'SD'},
+    { name: 'TENNESSEE', abbreviation: 'TN'},
+    { name: 'TEXAS', abbreviation: 'TX'},
+    { name: 'UTAH', abbreviation: 'UT'},
+    { name: 'VERMONT', abbreviation: 'VT'},
+    { name: 'VIRGIN ISLANDS', abbreviation: 'VI'},
+    { name: 'VIRGINIA', abbreviation: 'VA'},
+    { name: 'WASHINGTON', abbreviation: 'WA'},
+    { name: 'WEST VIRGINIA', abbreviation: 'WV'},
+    { name: 'WISCONSIN', abbreviation: 'WI'},
+    { name: 'WYOMING', abbreviation: 'WY' }
+]
+
+function quantiles(arr,percent, quantiles){
+	arr = arr.sort((a, b) => a - b); // ascending
+	len = arr.length;
+	num_obs = len*percent// number of observations per quantile
+	quantile = 1;
+	qs = [];
+	while(quantile <= quantiles ){ // for each quantile...
+		if (quantile == quantiles){ // if last quantile...
+			sl = arr.slice(quantile*num_obs-num_obs,len ); // start at normal position, end and length
+			qs.push(sl[sl.length-1]); // push last item
+		}
+		else{
+			sl = arr.slice(i*num_obs-num_obs, quantile*num_obs );/// start at beggening of quantle, end at end of quantile...
+                        qs.push(sl[sl.length-1]); // push last item
+		}
+		quantile++;
+	}
+	return qs;
+
+}
+
+$.ajax({
+  url: '{% url 'state-data' %}',
+  cache: 'false',
+  dataType: 'json',
+  type: 'POST',
+	data: {file:"state", feature: "median_listing_price"},
+  beforeSend: function(xhr){
+	  xhr.setRequestHeader('X-CSRFToken', $('{% csrf_token %}').val())
+  },
+  success: function(data) {
+
+	  var geojsonCounties = {}; // need to store every county if we want to be able to reset it
+
+	dates = {}; // data sorted by dates and state
+	selected_date = "201807";
+
+	// Create our number formatter.
+	var formatter = new Intl.NumberFormat('en-US', {
+	  style: 'currency',
+	  currency: 'USD',
+
+	  // These options are needed to round to whole numbers if that's what you want.
+	  //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+	  //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+	});
+
+	//formatter.format(2500);
+
+
+	var interactivemap = L.map("leaflet-map-interactive-map").setView([37.8, -96],4); // make map 	
+
+	JSON.parse(data).forEach(function(part, index, arr){ // structure data by date (so we can search by date) then state...
+		
+		d = arr[index]['month_date_yyyymm'];
+		state = arr[index].state.replace(/\s+/g,'').toLowerCase();
+		p = arr[index]['median_listing_price'];
+		
+		if (!dates[d]) {
+       			 dates[d] = {};        
+    		}
+		dates[d][state]=p;
+	});
+
+
+	i = []; // instances
+  	statesData.features.forEach(function(part, index, arr) { // for each state update statesData (whats used for choropleth)
+		density = parseFloat(dates[selected_date][arr[index].properties.name.replace(/\s+/g,'').toLowerCase()]); // get the state data from selected_date	
+		if(!isNaN(density)){
+  			arr[index].properties.density = density;
+			i.push(density);
+		}
+	});
+
+
+	  mean = (i.reduce((a, b) => a + b, 0)) / i.length;
+	  v = [] // variance
+	  i.forEach(item => v.push(Math.pow(item-mean,2)));
+	  sd = Math.sqrt((v.reduce((a, b) => a + b, 0)) / v.length);
+
+	  qs = quantiles(i,0.143,7);
+
+	  alert(qs);
+
+	  function getColorQ(e){
+	        if (e >= qs[7])
+                         return "#084594";
+                 else if (e >= qs[6])
+                         return "#2171b5"; //
+                 else if (e >= qs[5])
+                         return"#4292c6";
+                 else if (e >= qs[4]) 
+                         return"#6baed6";
+                 else if (e >= qs[3])
+                         return "#9ecae1";
+                 else if (e >= qs[2])
+                         return "#c6dbef"; //
+                 else if (e >= qs[1])
+                         return "#eff3ff";
+                 else
+                         return"#eff3ff";
+	  }
+
+
+    	 function getColor(e) {
+
+		 if (e >= mean + sd*2)
+			 return "#084594";
+		 else if (e >= mean + 1.5*sd)
+			 return "#2171b5"; //
+		 else if (e >= mean + sd)
+			 return"#4292c6";
+		 else if (e >= mean) 
+			 return"#6baed6";
+		 else if (e >= mean - sd)
+			 return "#9ecae1";
+		 else if (e >= mean - 1.5*sd)
+			 return "#c6dbef"; //
+		 else if (e >= mean - 2*sd)
+			 return "#eff3ff";
+		 else
+			 return"#eff3ff";
+	}
+	  
+	  function style(e) {
+		return {
+    			weight: 2,
+    			opacity: 1,
+    			color: "white",
+    			dashArray: "3",
+    			fillOpacity: 0.6,
+    			fillColor: getColor(e.properties.density),
+	};}
+	
+	 L.tileLayer( "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
+ 		{
+    		maxZoom: 18,
+    		attribution:
+      			'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    		id: "mapbox/light-v9",
+    		tileSize: 512,
+    		zoomOffset: -1,
+  		}
+	).addTo(interactivemap);
+
+	function highlightFeature(e) {
+    		var layer = e.target;
+
+    		layer.setStyle({
+        		weight: 2,
+        		color: '#252525',
+        		dashArray: '',
+        		fillOpacity: 0.7
+    		});
+
+    		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        		layer.bringToFront();
+    		}
+		info.update(layer.feature.properties);
+
+	}
+
+	function resetHighlight(e) {
+    		geojson.resetStyle(e.target);
+		info.update();
+	}
+
+	function zoomToFeature(e) {
+	   var layer = e.target;
+		
+		var state_code = ""
+		usStates.forEach(function(v,k){
+                                if (layer.feature.properties.name.toUpperCase() == v.name){
+                                        state_code= v.abbreviation;
+                                }
+                });
+
+ 	   interactivemap.fitBounds(e.target.getBounds());
+		$.ajax({
+			  url: '{% url 'state-data' %}',
+			  cache: 'false',
+			  dataType: 'json',
+			  type: 'POST',
+			data: {file:"county", state: state_code },
+			  beforeSend: function(xhr){
+				  xhr.setRequestHeader('X-CSRFToken', $('{% csrf_token %}').val())
+			  },
+			  success: function(data) {
+			  	//alert(JSON.stringify(data));
+				  var geojsonCounty = L.geoJson(data.features, { style: style }).addTo(interactivemap);
+				  
+				  geojsonCounties[state_code] = geojsonCounty;
+//				  alert("appended...");
+				  //alert(geojsonCounties);
+//				//geojson.addData(JSON.parse(data)).addTo(interactivemap);
+			  },
+			error: function(){}
+		});
+
+		//var geojsoncounties = L.geoJson(counties.features[0], {  }).addTo(interactivemap);
+	   //L.geoJSON(counties,  {onEachFeature: onEachFeature }).addTo(interactivemap);
+	}
+
+	 function onEachFeature(feature, layer) {
+    		layer.on({
+        		mouseover: highlightFeature,
+        		mouseout: resetHighlight,
+        		click: zoomToFeature
+    		});
+	}
+
+	var info = L.control();
+
+	info.onAdd = function (interactivemap) {
+    		this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    		this.update();
+    		return this._div;
+	};
+
+	// method that we will use to update the control based on feature properties passed
+	info.update = function (props) {
+    		this._div.innerHTML = '<h4>Median House Price</h4>' +  (props ?
+        	'<b>' + props.name + '</b><br />' + formatter.format(props.density) 
+        	: 'Hover over a state');
+	};
+
+	info.addTo(interactivemap);
+
+	 var legend = L.control({position: 'bottomright'});
+
+	legend.onAdd = function (interactivemap) {
+
+    		var div = L.DomUtil.create('div', 'info legend'),
+		grades = [mean-2*sd, mean-1.5*sd, mean-sd, mean, mean+sd, mean+sd*1.5, mean+2*sd],
+		labels = [];
+
+	    // loop through our density intervals and generate a label with a colored square for each interval
+	    for (var i = 0; i < grades.length; i++) {
+		div.innerHTML +=
+		    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+		    formatter.format(grades[i]) + (grades[i + 1] ? '&ndash;' + formatter.format(grades[i + 1]) + '<br>' : '+');
+	    }
+
+	    return div;
+	};
+
+legend.addTo(interactivemap);
+
+	var geojson = L.geoJson(statesData, { style: style, onEachFeature: onEachFeature }).addTo(interactivemap);
+	
+	  var prevZoom = interactivemap.getZoom();
+	  var zoomState = 0;
+	  interactivemap.on('zoomend',function(e){
+	var currZoom = interactivemap.getZoom();
+    var diff = prevZoom - currZoom;
+    if(diff > 0){
+  	   //alert('zoomed out');
+	    zoomState +=diff;
+    } else if(diff < 0) {
+	    zoomState +=diff;
+  	   //alert('zoomed in');
+    } 
+      else {
+  	   //alert('no change');
+    }
+
+    if (zoomState == 0){
+//	    alert(geojsonCounties);
+	//alert("original zoom");
+
+for (var key of Object.keys(geojsonCounties)) {
+                geojsonCounties[key].clearLayers();
+            }
+               
+		//interactivemap.removeLayer(layer);
+    
+    }
+    prevZoom = currZoom;
+});
+
+
+  },
+  error: function(error) {}
+});
+
+});*/
+
+</script>
+{% endblock %} 
+
