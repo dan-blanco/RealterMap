@@ -10,3 +10,11 @@ A few things left to add are :
 - Mysql
 - AJAX
 - JQuery, Javascript
+
+### Note
+- The code could be much cleaner, the javascript should be encapsulated such as 
+` myApp={main:function(){{
+    this.var='someVal';
+}} `
+- I made this app relatively fast. Hope the code is not too overwhelming! 
+
