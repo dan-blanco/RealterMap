@@ -42,10 +42,10 @@
                                     <div class="card-body">
 					    <div class="mt-4">
 
-                                       		 <h4 class="card-title mb-4">Interactive Real Estate Map</h4>
+                                       		 <h4 class="card-title mb-4">Select a State for More Details</h4>
 						 	<form>
 							<div class="col-lg-3">
-                                                        <label class="form-label" id="select-label">Select an option</label>
+                                                        <label class="form-label" id="select-label">Choose an feature</label>
                                                         <select id ="main_select" class="form-control select2">
 							    <optgroup label="Select Map Data">
                                                             </optgroup>
@@ -59,8 +59,11 @@
 					<p style="text-align:right;">Data Source : realtor.com residential listings database</p>
                                             <div class="col-lg-6">
                                                 <div>
-                                                    <label for="customRange1" class="form-label" id="dateLabel" ></label>
-                                                    <input type="range" class="form-range" id="daterange" onmouseup="updateDate(this.value)"  >
+							<span id="dateMin">D</span>
+
+						    <span id="dateMax" style = "float:right;" >E</span>
+						    <label style='padding-left:40%;' for="customRange1" class="form-label" id="dateLabel" ></label>
+						    <input type="range" class="form-range" id="daterange" onmouseup="updateDate(this.value)"  >
                                                 </div>
                                             </div>
 

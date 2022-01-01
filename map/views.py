@@ -12,7 +12,7 @@ import os
 class Index(View):
     def get(self, request):
         greeting = {}
-        greeting['heading'] = "Leaflet Maps"
+        greeting['heading'] = "US Real Estate"
         greeting['pageview'] = "Maps"
         return render (request,'index.html',greeting)
 

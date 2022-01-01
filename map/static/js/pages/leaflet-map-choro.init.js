@@ -69,10 +69,14 @@ $(document).ready(function(){ // MAIN
 
 
 	getAvalDates(); 
+	
+
 	getAvalFeatures();
  	info.addTo(interactivemap);
 
 	zoomState.prevZoom = interactivemap.getZoom();
+
+	//$('#dateMin').html(d.getFullYear() + " " + months_list[d.getMonth()]);
 
 }); // END MAIN
 
@@ -107,7 +111,7 @@ info.update = function (props) {
 
 		if (price<=0){ // ATTENTION - this will need to be fixed if data contains negative values
 			price = "Amount Unknown"; 
-		}else{
+		}else if(!descStats.useQs){
 			price = formatter.format(price)
 		}
 	}
@@ -224,7 +228,11 @@ function getAvalDates(){ // ATTENTION different data mauy have different dates, 
 	   (12 * (dateTo.getFullYear() - dateFrom.getFullYear()));
 
 		  $('#daterange').attr('max',months);
-		  $('#daterange').attr
+		  $('#daterange').val(months);
+		  //$('#daterange').attr
+		  $('#dateMin').html(String(gDates.min_date.getFullYear()));
+		  $('#dateMax').html(String(dateTo.getFullYear()));
+		  
 	  },
 	  error: function(error) {}
 	});
@@ -428,12 +436,12 @@ function style(e) {
 		dashArray: "3",
 		fillOpacity: 0.6,
 		fillColor: null,
-};
+	};
 
-if (descStats.useQs)
-	t.fillColor = getColorQ(e.properties.density);
-else
-	t.fillColor = getColor(e.properties.density);
+	if (descStats.useQs)
+		t.fillColor = getColorQ(e.properties.density);
+	else
+		t.fillColor = getColor(e.properties.density);
 
 
 return(t);
@@ -541,8 +549,17 @@ if($(this).val() == "active_listing_count"){
 	descStats.useQs = true;
 }else{
 	descStats.useQs = false;
-}
-fillStates(gDates.selected_date, $(this).val());
+}	
+	global_county_selected = false;
+	selected_states = [];
+	selected_states_full = [];
+//                      alert(geoData.geojsonCounties);
+		//alert("original zoom");
+
+	for (var key of Object.keys(geoData.geojsonCounties)) {
+		geoData.geojsonCounties[key].clearLayers();
+	}
+	fillStates(gDates.selected_date, $(this).val());
 });
 
 
