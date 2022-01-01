@@ -1,6 +1,6 @@
 # RealterMap
 
-http://34.202.100.11:8000
+View the app here! http://34.202.100.11:8000
 
 ## Main Files
 - https://github.com/dan-blanco/RealtyMap/blob/main/map/views.py
