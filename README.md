@@ -12,6 +12,8 @@ View the app here! http://34.202.100.11:8000
 - Mysql
 - AJAX
 - JQuery, Javascript
+- GEO-Spatial Data
+- SQL
 
 ### Note
 - The code could be much cleaner, the javascript should be encapsulated such as 
